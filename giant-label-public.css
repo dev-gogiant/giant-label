@@ -1,0 +1,119 @@
+/* =========================================================
+   Giant Label — Frontend Styles
+   Labels are rotated 90° using writing-mode: vertical-lr
+   so text reads top-to-bottom. The element itself is
+   portrait (narrow × tall) and positioned flush to the
+   right edge of the viewport.
+   ========================================================= */
+
+/* ── Wrapper ─────────────────────────────────────────────── */
+
+.gl-wrapper {
+	position: fixed;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 99999;
+	display: flex;
+	flex-direction: column; /* stack labels top-to-bottom */
+	align-items: flex-end;
+	gap: 6px;
+	pointer-events: none;
+}
+
+/* ── Base item ───────────────────────────────────────────── */
+
+.gl-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	/* Vertical text — reads bottom-to-top, tilting head right */
+	writing-mode: vertical-lr;
+	text-orientation: mixed;
+	transform: rotate(180deg);
+
+	/* Typography */
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 1.2px;
+	text-transform: uppercase;
+	white-space: nowrap;
+	text-decoration: none;
+	line-height: 1;
+
+	/* Spacing: top/bottom padding = label "length" buffer;
+	   left/right padding = tab thickness */
+	padding: 22px 13px;
+
+	pointer-events: all;
+	box-sizing: border-box;
+
+	/* Hover slide */
+	transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.gl-item span {
+	display: block;
+}
+
+.gl-item:hover {
+	/* Slide 8px away from the right edge (leftward into the page).
+	   translateX(8px) in the 180°-rotated local frame = leftward in viewport. */
+	transform: rotate(180deg) translateX(8px);
+	filter: brightness(1.1);
+	text-decoration: none;
+}
+
+/* ── Square variant ──────────────────────────────────────── */
+
+.gl-shape-square {
+	border-radius: 0;
+}
+
+/* ── Rounded variant ─────────────────────────────────────── */
+/* Full pill — both ends (top & bottom) are rounded.         */
+
+.gl-shape-rounded {
+	border-radius: 100px;
+}
+
+/* ── Hexagonal variant ───────────────────────────────────── */
+/* Vertical hexagon: pointed at top-centre and bottom-centre.
+   Extra padding ensures text clears the pointed ends.        */
+
+.gl-shape-hexagonal {
+	clip-path: polygon(
+		0%   20px,                   /* top-left  */
+		50%  0%,                     /* top point */
+		100% 20px,                   /* top-right */
+		100% calc(100% - 20px),      /* bottom-right */
+		50%  100%,                   /* bottom point */
+		0%   calc(100% - 20px)       /* bottom-left */
+	);
+	padding-top: 32px;
+	padding-bottom: 32px;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media ( max-width: 600px ) {
+	.gl-item {
+		font-size: 10px;
+		padding: 16px 11px;
+		letter-spacing: 0.8px;
+	}
+
+	.gl-shape-hexagonal {
+		clip-path: polygon(
+			0%   14px,
+			50%  0%,
+			100% 14px,
+			100% calc(100% - 14px),
+			50%  100%,
+			0%   calc(100% - 14px)
+		);
+		padding-top: 24px;
+		padding-bottom: 24px;
+	}
+}

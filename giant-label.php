@@ -169,10 +169,13 @@ class Giant_Label {
 	 * ---------------------------------------------------------------------- */
 
 	private function radius_style( $s, $btn ) {
-		$tl = intval( $s[ $btn . '_radius_tl' ] );
-		$tr = intval( $s[ $btn . '_radius_tr' ] );
-		$br = intval( $s[ $btn . '_radius_br' ] );
-		$bl = intval( $s[ $btn . '_radius_bl' ] );
+		// The label uses writing-mode + rotate(180deg), which swaps left and right
+		// corners visually. To match what the user sees/expects in the admin UI,
+		// we swap the left/right values here before outputting.
+		$tl = intval( $s[ $btn . '_radius_tr' ] ); // visual TL = CSS TR
+		$tr = intval( $s[ $btn . '_radius_tl' ] ); // visual TR = CSS TL
+		$br = intval( $s[ $btn . '_radius_bl' ] ); // visual BR = CSS BL
+		$bl = intval( $s[ $btn . '_radius_br' ] ); // visual BL = CSS BR
 		if ( $tl === 0 && $tr === 0 && $br === 0 && $bl === 0 ) {
 			return '';
 		}

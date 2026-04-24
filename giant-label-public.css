@@ -49,8 +49,7 @@
 	pointer-events: all;
 	box-sizing: border-box;
 
-	/* Hover slide */
-	transition: transform 0.25s ease, filter 0.25s ease;
+	transition: filter 0.25s ease, transform 0.25s ease;
 }
 
 .gl-item span {
@@ -58,10 +57,9 @@
 }
 
 .gl-item:hover {
-	/* Slide 8px away from the right edge (leftward into the page).
-	   translateX(8px) in the 180°-rotated local frame = leftward in viewport. */
-	transform: rotate(180deg) translateX(8px);
-	filter: brightness(1.1);
+	/* Brighten and grow slightly — stays flush to the right edge */
+	filter: brightness(1.18) saturate(1.1);
+	transform: rotate(180deg) scaleX(1.06);
 	text-decoration: none;
 }
 

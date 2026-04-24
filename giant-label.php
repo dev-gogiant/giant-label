@@ -51,10 +51,18 @@ class Giant_Label {
 			'btn1_url'        => '',
 			'btn1_bg_color'   => '#0073aa',
 			'btn1_text_color' => '#ffffff',
+			'btn1_radius_tl'  => 0,
+			'btn1_radius_tr'  => 0,
+			'btn1_radius_br'  => 0,
+			'btn1_radius_bl'  => 0,
 			'btn2_text'       => 'Get a Quote',
 			'btn2_url'        => '',
 			'btn2_bg_color'   => '#003d56',
 			'btn2_text_color' => '#ffffff',
+			'btn2_radius_tl'  => 0,
+			'btn2_radius_tr'  => 0,
+			'btn2_radius_br'  => 0,
+			'btn2_radius_bl'  => 0,
 			'position'        => 50,
 		);
 	}
@@ -109,6 +117,10 @@ class Giant_Label {
 			$clean[ $b . '_url' ]        = esc_url_raw( $raw[ $b . '_url' ]               ?? '' );
 			$clean[ $b . '_bg_color' ]   = sanitize_hex_color( $raw[ $b . '_bg_color' ]   ?? '#0073aa' ) ?: '#0073aa';
 			$clean[ $b . '_text_color' ] = sanitize_hex_color( $raw[ $b . '_text_color' ] ?? '#ffffff' ) ?: '#ffffff';
+			foreach ( array( 'tl', 'tr', 'br', 'bl' ) as $corner ) {
+				$key = $b . '_radius_' . $corner;
+				$clean[ $key ] = min( 100, max( 0, absint( $raw[ $key ] ?? 0 ) ) );
+			}
 		}
 
 		return $clean;
@@ -153,6 +165,24 @@ class Giant_Label {
 	}
 
 	/* -------------------------------------------------------------------------
+	 * Helpers
+	 * ---------------------------------------------------------------------- */
+
+	private function radius_style( $s, $btn ) {
+		$tl = intval( $s[ $btn . '_radius_tl' ] );
+		$tr = intval( $s[ $btn . '_radius_tr' ] );
+		$br = intval( $s[ $btn . '_radius_br' ] );
+		$bl = intval( $s[ $btn . '_radius_bl' ] );
+		if ( $tl === 0 && $tr === 0 && $br === 0 && $bl === 0 ) {
+			return '';
+		}
+		return sprintf(
+			'border-radius:%dpx %dpx %dpx %dpx;',
+			$tl, $tr, $br, $bl
+		);
+	}
+
+	/* -------------------------------------------------------------------------
 	 * Frontend render
 	 * ---------------------------------------------------------------------- */
 
@@ -177,7 +207,7 @@ class Giant_Label {
 	<?php if ( $show_btn1 ) : ?>
 	<a class="gl-item gl-shape-<?php echo $variant; ?>"
 	   href="<?php echo esc_url( $s['btn1_url'] ); ?>"
-	   style="background-color:<?php echo esc_attr( $s['btn1_bg_color'] ); ?>;color:<?php echo esc_attr( $s['btn1_text_color'] ); ?>;">
+	   style="background-color:<?php echo esc_attr( $s['btn1_bg_color'] ); ?>;color:<?php echo esc_attr( $s['btn1_text_color'] ); ?>;<?php echo $this->radius_style( $s, 'btn1' ); ?>">
 		<span><?php echo esc_html( $s['btn1_text'] ); ?></span>
 	</a>
 	<?php endif; ?>
@@ -185,7 +215,7 @@ class Giant_Label {
 	<?php if ( $show_btn2 ) : ?>
 	<a class="gl-item gl-shape-<?php echo $variant; ?>"
 	   href="<?php echo esc_url( $s['btn2_url'] ); ?>"
-	   style="background-color:<?php echo esc_attr( $s['btn2_bg_color'] ); ?>;color:<?php echo esc_attr( $s['btn2_text_color'] ); ?>;">
+	   style="background-color:<?php echo esc_attr( $s['btn2_bg_color'] ); ?>;color:<?php echo esc_attr( $s['btn2_text_color'] ); ?>;<?php echo $this->radius_style( $s, 'btn2' ); ?>">
 		<span><?php echo esc_html( $s['btn2_text'] ); ?></span>
 	</a>
 	<?php endif; ?>
@@ -368,6 +398,51 @@ class Giant_Label {
 									       name="<?php echo self::OPTION_KEY; ?>[<?php echo $b; ?>_text_color]"
 									       value="<?php echo esc_attr( $s[ $b . '_text_color' ] ); ?>"
 									       class="gl-color-picker">
+								</div>
+							</div>
+
+							<div class="gl-row gl-row--top">
+								<label class="gl-lbl">Border Radius</label>
+								<div class="gl-ctrl">
+									<div class="gl-radius-picker" data-btn="<?php echo esc_attr( $b ); ?>">
+										<div class="gl-radius-grid">
+											<?php
+											$corners = array(
+												'tl' => array( 'label' => 'Top left',     'pos' => 'top-left' ),
+												'tr' => array( 'label' => 'Top right',    'pos' => 'top-right' ),
+												'bl' => array( 'label' => 'Bottom left',  'pos' => 'bottom-left' ),
+												'br' => array( 'label' => 'Bottom right', 'pos' => 'bottom-right' ),
+											);
+											foreach ( $corners as $corner => $info ) :
+												$val = intval( $s[ $b . '_radius_' . $corner ] );
+											?>
+											<div class="gl-radius-corner gl-radius-corner--<?php echo esc_attr( $corner ); ?>">
+												<label class="gl-radius-corner__label"><?php echo esc_html( $info['label'] ); ?></label>
+												<div class="gl-radius-corner__input">
+													<input type="number"
+													       name="<?php echo self::OPTION_KEY; ?>[<?php echo $b; ?>_radius_<?php echo $corner; ?>]"
+													       value="<?php echo esc_attr( $val ); ?>"
+													       min="0" max="100" step="1"
+													       class="gl-radius-input"
+													       data-corner="<?php echo esc_attr( $corner ); ?>"
+													       aria-label="<?php echo esc_attr( $info['label'] ); ?> radius">
+													<span class="gl-radius-unit">px</span>
+												</div>
+											</div>
+											<?php endforeach; ?>
+										</div>
+										<div class="gl-radius-preview-wrap">
+											<div class="gl-radius-preview" id="gl-radius-preview-<?php echo esc_attr( $b ); ?>"
+											     style="border-radius:<?php
+											     echo esc_attr( intval( $s[ $b . '_radius_tl' ] ) ) . 'px ' .
+											          esc_attr( intval( $s[ $b . '_radius_tr' ] ) ) . 'px ' .
+											          esc_attr( intval( $s[ $b . '_radius_br' ] ) ) . 'px ' .
+											          esc_attr( intval( $s[ $b . '_radius_bl' ] ) ) . 'px';
+											     ?>;background:<?php echo esc_attr( $s[ $b . '_bg_color' ] ); ?>;">
+											</div>
+										</div>
+									</div>
+									<p class="gl-field-desc">Set a radius (0–100 px) per corner. Only applies when the design variant is <strong>Square</strong>.</p>
 								</div>
 							</div>
 

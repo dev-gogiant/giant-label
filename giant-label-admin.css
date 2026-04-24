@@ -409,6 +409,111 @@
 	background: #0073aa; /* overridden by inline style */
 }
 
+/* ── Border radius picker ────────────────────────────────── */
+
+.gl-radius-picker {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	flex-wrap: wrap;
+}
+
+.gl-radius-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr 1fr;
+	gap: 10px;
+	background: #f6f7f7;
+	border: 1px solid #e2e4e7;
+	border-radius: 8px;
+	padding: 14px;
+}
+
+.gl-radius-corner {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.gl-radius-corner--tl { grid-column: 1; grid-row: 1; }
+.gl-radius-corner--tr { grid-column: 2; grid-row: 1; }
+.gl-radius-corner--bl { grid-column: 1; grid-row: 2; }
+.gl-radius-corner--br { grid-column: 2; grid-row: 2; }
+
+.gl-radius-corner__label {
+	font-size: 10px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .5px;
+	color: #8c8f94;
+}
+
+.gl-radius-corner__input {
+	display: flex;
+	align-items: center;
+	gap: 0;
+}
+
+.gl-radius-input {
+	width: 58px;
+	padding: 6px 8px;
+	border: 1px solid #c3c4c7;
+	border-right: none;
+	border-radius: 4px 0 0 4px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #1d2327;
+	background: #fff;
+	outline: none;
+	transition: border-color .15s, box-shadow .15s;
+	-moz-appearance: textfield;
+}
+
+.gl-radius-input::-webkit-inner-spin-button,
+.gl-radius-input::-webkit-outer-spin-button {
+	opacity: 1;
+}
+
+.gl-radius-input:focus {
+	border-color: #0073aa;
+	box-shadow: 0 0 0 2px rgba(0,115,170,.15);
+}
+
+.gl-radius-unit {
+	padding: 6px 8px;
+	background: #f0f0f1;
+	border: 1px solid #c3c4c7;
+	border-radius: 0 4px 4px 0;
+	font-size: 12px;
+	font-weight: 600;
+	color: #646970;
+	line-height: 1.4;
+}
+
+/* Live preview swatch */
+
+.gl-radius-preview-wrap {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 80px;
+	height: 80px;
+}
+
+.gl-radius-preview {
+	width: 60px;
+	height: 60px;
+	background: #0073aa;
+	transition: border-radius .15s ease;
+}
+
+.gl-field-desc {
+	margin: 8px 0 0;
+	font-size: 12px;
+	color: #646970;
+	line-height: 1.5;
+}
+
 /* ── Save row ────────────────────────────────────────────── */
 
 .gl-save-row {

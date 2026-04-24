@@ -36,51 +36,66 @@ jQuery( document ).ready( function ( $ ) {
 
 	/* ── Hover effect picker ─────────────────────────────── */
 
-	var $demo = $( '#gl-hover-demo' );
+	var $demo  = $( '#gl-hover-demo' );
+	var demoEl = $demo[0];
 
-	// CSS applied to the demo element per effect key
-	var hoverEffects = {
-		glow:     function( el ) {
-			$( el ).css({ 'filter': 'brightness(1.12)', 'box-shadow': '4px 0 18px 4px rgba(0,0,0,.35)', 'transform': 'rotate(180deg)' });
-		},
-		brighten: function( el ) {
-			$( el ).css({ 'filter': 'brightness(1.22) saturate(1.1)', 'transform': 'rotate(180deg) scaleX(1.06)' });
-		},
-		grow:     function( el ) {
-			$( el ).css({ 'transform': 'rotate(180deg) scale(1.1)', 'transform-origin': 'right center' });
-		},
-		shrink:   function( el ) {
-			$( el ).css({ 'filter': 'brightness(0.9)', 'transform': 'rotate(180deg) scale(0.92)' });
-		},
-		pulse:    function( el ) {
-			$( el ).css({ 'animation': 'gl-demo-pulse 0.55s ease forwards' });
-		},
-		shake:    function( el ) {
-			$( el ).css({ 'animation': 'gl-demo-shake 0.45s ease forwards' });
-		},
-		flip:     function( el ) {
-			$( el ).css({ 'transform': 'rotate(180deg) rotateY(180deg)', 'filter': 'brightness(1.1)' });
-		},
-		none:     function() {}
-	};
-
-	function resetDemo() {
-		$demo.css({ filter: '', transform: 'rotate(180deg)', 'box-shadow': '', animation: '' });
-	}
-
-	function applyDemoEffect( key ) {
-		resetDemo();
-		if ( hoverEffects[ key ] ) {
-			hoverEffects[ key ]( $demo[0] );
-		}
-	}
-
-	// Inject keyframes for demo animations
+	// Inject keyframes needed for animation-based effects
 	var demoStyles = document.createElement( 'style' );
 	demoStyles.textContent =
 		'@keyframes gl-demo-pulse{0%{transform:rotate(180deg) scale(1)}40%{transform:rotate(180deg) scale(1.08)}70%{transform:rotate(180deg) scale(0.97)}100%{transform:rotate(180deg) scale(1)}}' +
 		'@keyframes gl-demo-shake{0%{transform:rotate(180deg) translateY(0)}20%{transform:rotate(180deg) translateY(-4px)}40%{transform:rotate(180deg) translateY(4px)}60%{transform:rotate(180deg) translateY(-3px)}80%{transform:rotate(180deg) translateY(3px)}100%{transform:rotate(180deg) translateY(0)}}';
 	document.head.appendChild( demoStyles );
+
+	function resetDemo() {
+		// Kill any running animation first, force a reflow, then clear all overrides
+		demoEl.style.animation  = 'none';
+		void demoEl.offsetWidth; // reflow — forces animation to restart cleanly next time
+		demoEl.style.animation     = '';
+		demoEl.style.transform     = 'rotate(180deg)';
+		demoEl.style.filter        = '';
+		demoEl.style.boxShadow     = '';
+		demoEl.style.transformOrigin = '';
+	}
+
+	function applyDemoEffect( key ) {
+		// Always reset + reflow so animations fire fresh on every mouseenter
+		demoEl.style.animation = 'none';
+		void demoEl.offsetWidth;
+		demoEl.style.animation = '';
+
+		switch ( key ) {
+			case 'glow':
+				demoEl.style.transform = 'rotate(180deg)';
+				demoEl.style.filter    = 'brightness(1.12)';
+				demoEl.style.boxShadow = '4px 0 18px 4px rgba(0,0,0,.35)';
+				break;
+			case 'brighten':
+				demoEl.style.transform = 'rotate(180deg) scaleX(1.06)';
+				demoEl.style.filter    = 'brightness(1.22) saturate(1.1)';
+				break;
+			case 'grow':
+				demoEl.style.transformOrigin = 'right center';
+				demoEl.style.transform       = 'rotate(180deg) scale(1.1)';
+				break;
+			case 'shrink':
+				demoEl.style.transform = 'rotate(180deg) scale(0.92)';
+				demoEl.style.filter    = 'brightness(0.9)';
+				break;
+			case 'pulse':
+				demoEl.style.animation = 'gl-demo-pulse 0.55s ease forwards';
+				break;
+			case 'shake':
+				demoEl.style.animation = 'gl-demo-shake 0.45s ease forwards';
+				break;
+			case 'flip':
+				demoEl.style.transform = 'rotate(180deg) rotateY(180deg)';
+				demoEl.style.filter    = 'brightness(1.1)';
+				break;
+			case 'none':
+			default:
+				break;
+		}
+	}
 
 	$demo.on( 'mouseenter', function () {
 		var active = $( 'input[name$="[hover_effect]"]:checked' ).val() || 'none';

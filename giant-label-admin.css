@@ -512,10 +512,11 @@
 	text-transform: uppercase;
 	padding: 16px 10px;
 	cursor: pointer;
-	transition: transform .3s ease, filter .3s ease, box-shadow .3s ease, animation .3s ease;
-	transform-origin: right center;
+	/* transition only on non-animation effects; animation effects bypass this */
+	transition: transform .3s ease, filter .3s ease, box-shadow .3s ease;
 	backface-visibility: hidden;
 	perspective: 600px;
+	will-change: transform, filter;
 }
 
 /* ── Border radius picker ────────────────────────────────── */

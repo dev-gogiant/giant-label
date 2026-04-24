@@ -409,6 +409,115 @@
 	background: #0073aa; /* overridden by inline style */
 }
 
+/* ── Hover effect picker ─────────────────────────────────── */
+
+.gl-hover-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+	.gl-hover-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.gl-hcard {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	padding: 14px 10px 12px;
+	border: 2px solid #dde0e4;
+	border-radius: 8px;
+	background: #fafafa;
+	cursor: pointer;
+	user-select: none;
+	transition: border-color .15s, background .15s;
+	text-align: center;
+}
+
+.gl-hcard:hover {
+	border-color: #0073aa;
+	background: #f0f7fc;
+}
+
+.gl-hcard--on {
+	border-color: #0073aa;
+	background: #f0f7fc;
+}
+
+.gl-hcard input {
+	display: none;
+}
+
+.gl-hcard__icon {
+	font-size: 20px;
+	line-height: 1;
+	color: #0073aa;
+}
+
+.gl-hcard__name {
+	font-size: 12px;
+	font-weight: 700;
+	color: #1d2327;
+	letter-spacing: .3px;
+}
+
+.gl-hcard__desc {
+	font-size: 10.5px;
+	color: #8c8f94;
+	line-height: 1.4;
+}
+
+/* Demo preview */
+
+.gl-hover-demo-wrap {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	margin-top: 4px;
+}
+
+.gl-hover-demo-label {
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: .6px;
+	color: #8c8f94;
+	white-space: nowrap;
+}
+
+.gl-hover-demo-stage {
+	background: #f0f1f2;
+	border: 1px solid #e2e4e7;
+	border-radius: 6px;
+	height: 80px;
+	width: 180px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	overflow: hidden;
+}
+
+.gl-hover-demo {
+	writing-mode: vertical-lr;
+	text-orientation: mixed;
+	transform: rotate(180deg);
+	background: #0073aa;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	padding: 16px 10px;
+	cursor: pointer;
+	transition: transform .3s ease, filter .3s ease, box-shadow .3s ease, animation .3s ease;
+	transform-origin: right center;
+	backface-visibility: hidden;
+	perspective: 600px;
+}
+
 /* ── Border radius picker ────────────────────────────────── */
 
 .gl-radius-picker {

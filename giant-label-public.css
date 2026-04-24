@@ -56,11 +56,75 @@
 	display: block;
 }
 
+/* Default: no hover effect unless a specific class is set */
 .gl-item:hover {
-	/* Brighten and grow slightly — stays flush to the right edge */
-	filter: brightness(1.18) saturate(1.1);
-	transform: rotate(180deg) scaleX(1.06);
 	text-decoration: none;
+}
+
+/* ── Glow ────────────────────────────────────────────────── */
+.gl-hover-glow .gl-item:hover {
+	filter: brightness(1.12);
+	box-shadow: 4px 0 18px 4px rgba(0,0,0,.35);
+	transform: rotate(180deg);
+}
+
+/* ── Brighten ─────────────────────────────────────────────── */
+.gl-hover-brighten .gl-item:hover {
+	filter: brightness(1.22) saturate(1.1);
+	transform: rotate(180deg) scaleX(1.06);
+}
+
+/* ── Grow ─────────────────────────────────────────────────── */
+.gl-hover-grow .gl-item:hover {
+	transform: rotate(180deg) scale(1.1);
+	transform-origin: right center;
+}
+
+/* ── Shrink ───────────────────────────────────────────────── */
+.gl-hover-shrink .gl-item:hover {
+	transform: rotate(180deg) scale(0.92);
+	filter: brightness(0.9);
+}
+
+/* ── Pulse ────────────────────────────────────────────────── */
+@keyframes gl-pulse {
+	0%   { transform: rotate(180deg) scale(1);    }
+	40%  { transform: rotate(180deg) scale(1.08); }
+	70%  { transform: rotate(180deg) scale(0.97); }
+	100% { transform: rotate(180deg) scale(1);    }
+}
+.gl-hover-pulse .gl-item:hover {
+	animation: gl-pulse 0.55s ease forwards;
+}
+
+/* ── Shake ────────────────────────────────────────────────── */
+@keyframes gl-shake {
+	0%   { transform: rotate(180deg) translateY(0);    }
+	20%  { transform: rotate(180deg) translateY(-4px); }
+	40%  { transform: rotate(180deg) translateY(4px);  }
+	60%  { transform: rotate(180deg) translateY(-3px); }
+	80%  { transform: rotate(180deg) translateY(3px);  }
+	100% { transform: rotate(180deg) translateY(0);    }
+}
+.gl-hover-shake .gl-item:hover {
+	animation: gl-shake 0.45s ease forwards;
+}
+
+/* ── Flip ─────────────────────────────────────────────────── */
+.gl-hover-flip .gl-item {
+	transition: transform 0.45s ease, filter 0.45s ease;
+	backface-visibility: hidden;
+	perspective: 600px;
+}
+.gl-hover-flip .gl-item:hover {
+	transform: rotate(180deg) rotateY(180deg);
+	filter: brightness(1.1);
+}
+
+/* ── None ─────────────────────────────────────────────────── */
+.gl-hover-none .gl-item:hover {
+	transform: rotate(180deg);
+	filter: none;
 }
 
 /* ── Square variant ──────────────────────────────────────── */

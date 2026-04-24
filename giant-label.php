@@ -64,6 +64,7 @@ class Giant_Label {
 			'btn2_radius_br'  => 0,
 			'btn2_radius_bl'  => 0,
 			'position'        => 50,
+			'hover_effect'    => 'glow',
 		);
 	}
 
@@ -111,6 +112,10 @@ class Giant_Label {
 		                            ? $raw['buttons_display'] : 'two';
 
 		$clean['position'] = min( 95, max( 5, absint( $raw['position'] ?? 50 ) ) );
+
+		$hover_effects          = array( 'glow', 'brighten', 'grow', 'shrink', 'pulse', 'shake', 'flip', 'none' );
+		$clean['hover_effect']  = in_array( $raw['hover_effect'] ?? '', $hover_effects, true )
+		                          ? $raw['hover_effect'] : 'glow';
 
 		foreach ( array( 'btn1', 'btn2' ) as $b ) {
 			$clean[ $b . '_text' ]       = sanitize_text_field( $raw[ $b . '_text' ]      ?? '' );
@@ -203,7 +208,7 @@ class Giant_Label {
 			return;
 		}
 		?>
-<div class="gl-wrapper gl-variant-<?php echo $variant; ?>"
+<div class="gl-wrapper gl-variant-<?php echo $variant; ?> gl-hover-<?php echo esc_attr( $s['hover_effect'] ); ?>"
      style="top:<?php echo intval( $s['position'] ); ?>%;transform:translateY(-50%);"
      role="complementary" aria-label="<?php esc_attr_e( 'Quick links', 'giant-label' ); ?>">
 
@@ -352,6 +357,50 @@ class Giant_Label {
 							</div>
 						</div>
 					</div>
+
+			<!-- ── Hover Effect ───────────────────────────────────── -->
+			<div class="gl-card gl-card--full">
+				<div class="gl-card-head"><span class="dashicons dashicons-cursor"></span> Hover Effect</div>
+				<div class="gl-card-body">
+					<div class="gl-row gl-row--top">
+						<label class="gl-lbl">Effect</label>
+						<div class="gl-ctrl">
+							<?php
+							$hover_options = array(
+								'glow'     => array( 'label' => 'Glow',     'icon' => '✦', 'desc' => 'Soft colour glow radiates outward' ),
+								'brighten' => array( 'label' => 'Brighten', 'icon' => '☀', 'desc' => 'Label lightens and slightly enlarges' ),
+								'grow'     => array( 'label' => 'Grow',     'icon' => '⬆', 'desc' => 'Scales up from the screen edge' ),
+								'shrink'   => array( 'label' => 'Shrink',   'icon' => '⬇', 'desc' => 'Presses inward like a button press' ),
+								'pulse'    => array( 'label' => 'Pulse',    'icon' => '◉', 'desc' => 'Repeating heartbeat scale animation' ),
+								'shake'    => array( 'label' => 'Shake',    'icon' => '↔', 'desc' => 'Quick left-right jolt on hover' ),
+								'flip'     => array( 'label' => 'Flip',     'icon' => '↺', 'desc' => 'Rotates 180° along the long axis' ),
+								'none'     => array( 'label' => 'None',     'icon' => '—', 'desc' => 'No hover effect' ),
+							);
+							?>
+							<div class="gl-hover-grid">
+								<?php foreach ( $hover_options as $key => $opt ) : ?>
+								<label class="gl-hcard<?php echo $s['hover_effect'] === $key ? ' gl-hcard--on' : ''; ?>"
+								       data-effect="<?php echo esc_attr( $key ); ?>">
+									<input type="radio"
+									       name="<?php echo self::OPTION_KEY; ?>[hover_effect]"
+									       value="<?php echo esc_attr( $key ); ?>"
+									       <?php checked( $s['hover_effect'], $key ); ?>>
+									<span class="gl-hcard__icon"><?php echo $opt['icon']; ?></span>
+									<span class="gl-hcard__name"><?php echo esc_html( $opt['label'] ); ?></span>
+									<span class="gl-hcard__desc"><?php echo esc_html( $opt['desc'] ); ?></span>
+								</label>
+								<?php endforeach; ?>
+							</div>
+							<div class="gl-hover-demo-wrap">
+								<span class="gl-hover-demo-label">Hover over the label to preview</span>
+								<div class="gl-hover-demo-stage">
+									<div class="gl-hover-demo" id="gl-hover-demo">Label</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<!-- ── Labels ─────────────────────────────────────────── -->
 			<div class="gl-card gl-card--full">

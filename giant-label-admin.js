@@ -1,7 +1,57 @@
 /* Giant Label — Admin JS */
 jQuery( document ).ready( function ( $ ) {
 
+	/* ── Theme palette swatches ────────────────────────── */
+	var palette = ( window.glData && window.glData.palette ) || [];
+
+	function buildPaletteStrip( $input ) {
+		if ( ! palette.length ) return;
+
+		var $strip = $( '<div class="gl-palette-strip"></div>' );
+
+		$.each( palette, function ( i, item ) {
+			var $swatch = $( '<button type="button" class="gl-palette-swatch" title="' + item.name + '"></button>' );
+			$swatch.css( 'background', item.color );
+			$swatch.on( 'click', function () {
+				$input.val( item.color ).trigger( 'change' );
+				// Drive wpColorPicker's internal state
+				$input.wpColorPicker( 'color', item.color );
+				$strip.find( '.gl-palette-swatch' ).removeClass( 'gl-palette-swatch--active' );
+				$swatch.addClass( 'gl-palette-swatch--active' );
+				syncRadiusPreview( $input );
+				syncVpMarkers();
+			} );
+			// Mark active on load
+			if ( $input.val().toLowerCase() === item.color.toLowerCase() ) {
+				$swatch.addClass( 'gl-palette-swatch--active' );
+			}
+			$strip.append( $swatch );
+		} );
+
+		$input.closest( '.gl-ctrl' ).prepend( $strip );
+	}
+
+	function syncRadiusPreview( $input ) {
+		var name   = $input.attr( 'name' ) || '';
+		var isBg   = name.indexOf( '_bg_color' ) !== -1;
+		if ( ! isBg ) return;
+		var btnKey = name.indexOf( 'btn1' ) !== -1 ? 'btn1' : 'btn2';
+		$( '#gl-radius-preview-' + btnKey ).css( 'background', $input.val() );
+	}
+
+	function syncVpMarkers() {
+		var c1 = $( 'input[name$="[btn1_bg_color]"]' ).val();
+		var c2 = $( 'input[name$="[btn2_bg_color]"]' ).val();
+		$( '#gl-vp-markers .gl-vp-marker' ).eq(0).css( 'background', c1 );
+		$( '#gl-vp-markers .gl-vp-marker' ).eq(1).css( 'background', c2 );
+	}
+
 	/* ── Colour pickers ────────────────────────────────── */
+	$( '.gl-color-picker' ).each( function () {
+		var $input = $( this );
+		buildPaletteStrip( $input );
+	} );
+
 	$( '.gl-color-picker' ).wpColorPicker( {
 		change: function ( event, ui ) {
 			// Keep the radius preview background in sync with the bg colour picker

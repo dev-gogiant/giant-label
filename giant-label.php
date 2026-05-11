@@ -154,6 +154,40 @@ class Giant_Label {
 			GIANT_LABEL_VERSION,
 			true
 		);
+		wp_localize_script( 'giant-label-admin', 'glData', array(
+			'palette' => $this->get_theme_palette(),
+		) );
+	}
+
+	private function get_theme_palette() {
+		$colors = array();
+
+		// Try Global Styles (WP 5.9+, theme.json)
+		if ( class_exists( 'WP_Theme_JSON_Resolver' ) ) {
+			$settings = WP_Theme_JSON_Resolver::get_merged_data()->get_settings();
+			if ( ! empty( $settings['color']['palette']['theme'] ) ) {
+				foreach ( $settings['color']['palette']['theme'] as $c ) {
+					$colors[] = array( 'name' => $c['name'], 'color' => $c['color'] );
+				}
+			}
+			if ( ! empty( $settings['color']['palette']['custom'] ) ) {
+				foreach ( $settings['color']['palette']['custom'] as $c ) {
+					$colors[] = array( 'name' => $c['name'], 'color' => $c['color'] );
+				}
+			}
+		}
+
+		// Fallback: classic editor-color-palette theme support
+		if ( empty( $colors ) ) {
+			$support = get_theme_support( 'editor-color-palette' );
+			if ( ! empty( $support[0] ) ) {
+				foreach ( $support[0] as $c ) {
+					$colors[] = array( 'name' => $c['name'], 'color' => $c['color'] );
+				}
+			}
+		}
+
+		return $colors;
 	}
 
 	public function enqueue_public_assets() {
